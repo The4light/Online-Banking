@@ -1,84 +1,23 @@
-package com.bankapp.backend.models;
+@Entity
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User extends BaseModel {
 
-import com.bankapp.backend.enums.Role;
-import org.bson.types.ObjectId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-import java.time.LocalDateTime;
+    @Column(unique = true, nullable = false, updatable = false)
+    private String uid = UUID.randomUUID().toString();
 
-public class User {
-
-    private ObjectId id;
-    private String fullName;
+    @Column(nullable = false, unique = true)
     private String email;
-    private String passwordHash;
-    private Role role;
-    private boolean active;
-    private LocalDateTime createdAt;
 
-    public User() {
-        this.createdAt = LocalDateTime.now();
-        this.active = true;
-        this.role = Role.USER;
-    }
+    @Column(nullable = false)
+    private String password;
 
-    public User(String fullName, String email, String passwordHash) {
-        this();
-        this.fullName = fullName;
-        this.email = email.toLowerCase();
-        this.passwordHash = passwordHash;
-    }
-
-    // ===== GETTERS & SETTERS =====
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email.toLowerCase();
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    private String fullName;
 }
