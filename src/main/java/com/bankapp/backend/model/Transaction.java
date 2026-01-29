@@ -1,21 +1,33 @@
+package com.bankapp.backend.model;
+
+import com.bankapp.backend.enums.TransactionType;
+import jakarta.persistence.*;
+import lombok.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "transactions")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Transaction extends BaseModel {
-
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String uid = UUID.randomUUID().toString();
+    private BigDecimal amount;
 
-    private String fromAccountUid;
-    private String toAccountUid;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
-    private double amount;
-    private String type;
+    private String description;
+    private LocalDateTime timestamp;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @PrePersist
+    protected void onCreation() {
+        this.timestamp = LocalDateTime.now();
+    }
 }

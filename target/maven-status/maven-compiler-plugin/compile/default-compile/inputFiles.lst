@@ -1,0 +1,51 @@
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\config\JpaConfig.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\controller\ LoanController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\controller\AccountController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\controller\AuthController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\controller\CardController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\controller\NotificationController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\controller\PaymentController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\controller\TransactionController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\dto\ RegisterRequest.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\dto\LoginRequest.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\dto\PaymentRequest.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\dto\TransactionResponse.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\dto\TransferRequest.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\enums\AccountStatus.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\enums\LoanStatus.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\enums\Role.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\enums\TransactionType.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\exception\ UnauthorizedException.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\exception\InsufficientBalanceException.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\exception\NotFoundException.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\exception\ValidationException.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\repository\AccountRepository.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\repository\CardRepository.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\repository\LoanRepository.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\repository\NotificationRepository.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\repository\TransactionRepository.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\repository\UserRepository.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\security\ SessionManager.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\security\PasswordHasher.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\security\RoleValidator.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\service\AccountService.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\service\AuthService.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\service\CardService.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\service\LoanService.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\service\NotificationService.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\service\PaymentService.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\service\TransactionService.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\utils\ DateUtils.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\utils\ReferenceGenerator.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\backend\utils\Validator.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\BankApplication.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\AdminController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\CardController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\DashboardController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\LoanController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\LoginController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\PaymentController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\RegisterController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\controller\TransferController.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\frontend\utils\SceneNavigator.java
+C:\Users\USER\IdeaProjects\Online banking system\src\main\java\com\bankapp\shared\ AppContext.java

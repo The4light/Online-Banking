@@ -1,23 +1,36 @@
+package com.bankapp.backend.model;
+
+import com.bankapp.backend.enums.Role;
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class User extends BaseModel {
-
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, updatable = false)
-    private String uid = UUID.randomUUID().toString();
+    private String firstName;
+    private String lastName;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
+    private String phoneNumber;
 
-    private String fullName;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Account> accounts;
+
+    @PrePersist
+    protected void onCreate() { createdAt = LocalDateTime.now(); }
 }
