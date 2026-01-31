@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import java.net.URL?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bankapp.frontend.controller.DashboardController">
+
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+    </stylesheets>
+
+    <left>
+        <VBox spacing="20" prefWidth="250" styleClass="sidebar">
+            <ImageView fitHeight="50" preserveRatio="true">
+                <Image url="@../assets/images/logo.jpeg" />
+                <VBox.margin><Insets top="20" left="20" bottom="20"/></VBox.margin>
+            </ImageView>
+
+            <Button text="Dashboard" styleClass="sidebar-btn-active" maxWidth="Infinity"/>
+            <Button text="Transactions" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button text="Accounts" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button text="Settings" styleClass="sidebar-btn" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button text="Logout" styleClass="sidebar-btn-logout" maxWidth="Infinity" onAction="#handleLogout"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="30" style="-fx-padding: 40;">
+            <Label text="Welcome back, User!" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1e3a52;"/>
+
+            <HBox spacing="20">
+                <VBox prefWidth="250" spacing="10" styleClass="card-balance">
+                    <Label text="Total Balance" style="-fx-text-fill: white;"/>
+                    <Label text="\$12,450.00" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                </VBox>
+
+                <VBox prefWidth="250" spacing="10" styleClass="card">
+                    <Label text="Monthly Income" style="-fx-text-fill: #7f8c8d;"/>
+                    <Label text="\$4,200.00" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="10" VBox.vgrow="ALWAYS" styleClass="card">
+                <Label text="Recent Transactions" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                <TableView fx:id="transactionTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn text="Date" prefWidth="150"/>
+                        <TableColumn text="Description" prefWidth="300"/>
+                        <TableColumn text="Amount" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

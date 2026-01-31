@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bankapp.frontend.controller.RegisterController">
+
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+    </stylesheets>
+
+    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="150.0"
+          AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="50.0" styleClass="card">
+        <ImageView fitHeight="60" preserveRatio="true">
+            <image>
+                <Image url="@../assets/images/logo.jpeg" />
+            </image>
+        </ImageView>
+
+        <Label text="Create SecureBank Account" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1e3a52;"/>
+
+        <HBox spacing="10">
+            <TextField fx:id="firstNameField" promptText="First Name" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="lastNameField" promptText="Last Name" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <TextField fx:id="emailField" promptText="Email Address"/>
+        <TextField fx:id="phoneField" promptText="Phone Number"/>
+        <PasswordField fx:id="passwordField" promptText="Password"/>
+
+        <Button text="Sign Up" onAction="#handleRegister" styleClass="button-primary" prefWidth="200"/>
+
+        <Hyperlink text="Already have an account? Sign In"
+                   onAction="#switchToLogin"
+                   style="-fx-text-fill: #2a73e8;"/>
+    </VBox>
+</AnchorPane>

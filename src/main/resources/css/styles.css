@@ -1,19 +1,71 @@
+/* Global settings */
 .root {
-    -fx-font-family: "Segoe UI";
-    -fx-background-color: #ffffff;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-background-color: #f4f7f9;
 }
 
-.label.title {
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
+/* Sidebar background */
+.sidebar {
+    -fx-background-color: #1e3a52; /* Deep Blue from your design */
 }
 
+/* Rounded Cards for Login and Dashboard */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+/* Input Fields styling */
 .text-field, .password-field {
-    -fx-pref-width: 250px;
+    -fx-background-radius: 5;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
 }
 
-.button {
-    -fx-background-color: #1f6feb;
+/* The primary blue button */
+.button-primary {
+    -fx-background-color: #2a73e8;
     -fx-text-fill: white;
-    -fx-pref-width: 250px;
+    -fx-background-radius: 5;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.button-primary:hover {
+    -fx-background-color: #1c5fc8;
+}
+/* Sidebar Styling */
+.sidebar {
+    -fx-background-color: #1e3a52;
+    -fx-padding: 10;
+}
+
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ecf0f1;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 15 20;
+}
+
+.sidebar-btn-active {
+    -fx-background-color: #2a73e8;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 15 20;
+}
+
+/* The Blue Balance Card */
+.card-balance {
+    -fx-background-color: linear-gradient(to bottom right, #2a73e8, #1e3a52);
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+}
+
+/* Logout button at the bottom */
+.sidebar-btn-logout {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-margin: 0 0 20 0;
 }

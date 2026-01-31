@@ -3,9 +3,10 @@ package com.bankapp.backend.service;
 import com.bankapp.backend.dto.RegisterRequest;
 import com.bankapp.backend.model.User;
 import com.bankapp.backend.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import com.bankapp.backend.enums.Role;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder; // MISSING IMPORT
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // ADD THIS LINE
 
     public String registerUser(RegisterRequest request) {
         // 1. Check if user exists
@@ -26,7 +28,10 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // We'll hash this soon!
+
+        // This will now work because passwordEncoder is declared above
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
         user.setPhoneNumber(request.getPhoneNumber());
         user.setCreatedAt(LocalDateTime.now());
         user.setRole(Role.USER);

@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import java.net.URL?>
 
-<VBox spacing="15"
-      alignment="CENTER"
-      xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.bankapp.frontend.controller.LoginController"
-      prefWidth="400"
-      prefHeight="500">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bankapp.frontend.controller.LoginController">
 
-    <Label text="Online Banking"
-           styleClass="title"/>
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+    </stylesheets>
 
-    <TextField fx:id="emailField"
-               promptText="Email"/>
+    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="200.0"
+          AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="80.0" styleClass="card">
 
-    <PasswordField fx:id="passwordField"
-                   promptText="Password"/>
+        <ImageView fitHeight="60" preserveRatio="true">
+            <Image url="@../assets/images/logo.jpeg" />
+        </ImageView>
 
-    <Button text="Login"
-            onAction="#handleLogin"/>
+        <Label text="Welcome Back" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1e3a52;"/>
 
-    <Hyperlink text="Create an account"
-               onAction="#goToRegister"/>
+        <TextField fx:id="emailField" promptText="Email Address" />
+        <PasswordField fx:id="passwordField" promptText="Password" />
 
-</VBox>
+        <Button text="Sign In" onAction="#handleLogin" styleClass="button-primary" prefWidth="200"/>
+
+        <Hyperlink text="Don't have an account? Sign Up" onAction="#switchToRegister" style="-fx-text-fill: #2a73e8;"/>
+    </VBox>
+</AnchorPane>
