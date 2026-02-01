@@ -1,5 +1,6 @@
 package com.bankapp.frontend.utils;
 
+import com.bankapp.frontend.controller.DashboardController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -26,6 +27,21 @@ public class SceneManager {
         } catch (IOException e) {
             System.err.println("CRITICAL: Could not load " + fxmlFile);
             e.printStackTrace();
+        }
+    }
+    public static DashboardController loadDashboard(Node node) {
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/fxml/dashboard.fxml"));
+            Parent root = loader.load();
+
+            // Use the existing stage more reliably
+            Stage stage = (Stage) node.getScene().getWindow();
+            stage.getScene().setRoot(root);
+
+            return loader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

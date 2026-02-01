@@ -1,6 +1,7 @@
 package com.bankapp.backend.model;
 
 import com.bankapp.backend.enums.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference // CRITICAL: Fixes the MismatchedInputException
     private User user;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)

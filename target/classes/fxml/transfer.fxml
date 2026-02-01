@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bankapp.frontend.controller.TransferController">
+
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+    </stylesheets>
+
+    <left>
+        <VBox spacing="20" prefWidth="250" styleClass="sidebar">
+            <Label text="BANK APP" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;">
+                <VBox.margin><Insets top="20" left="20" bottom="40"/></VBox.margin>
+            </Label>
+            <Button text="Dashboard" onAction="#goBack" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button text="Transfer Money" styleClass="sidebar-btn-active" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #f4f7f9;">
+            <Label text="Transfer Funds" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1e3a52;"/>
+
+            <VBox spacing="20" styleClass="card" style="-fx-max-width: 500; -fx-padding: 30;">
+                <VBox spacing="5">
+                    <Label text="From Account" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="fromAccountSelector" prefWidth="440" promptText="Select Source Account"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Beneficiary Account Number" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="targetAccountField" promptText="Enter 10-digit account number"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Amount ($)" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="amountField" promptText="0.00"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Description" style="-fx-font-weight: bold;"/>
+                    <TextArea fx:id="descriptionField" prefHeight="80" promptText="What is this for?"/>
+                </VBox>
+
+                <Button text="Confirm Transfer" onAction="#handleTransfer" maxWidth="Infinity"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12;"/>
+
+                <Label fx:id="statusLabel" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

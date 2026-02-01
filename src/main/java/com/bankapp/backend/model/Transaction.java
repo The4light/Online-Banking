@@ -30,4 +30,7 @@ public class Transaction {
     protected void onCreation() {
         this.timestamp = LocalDateTime.now();
     }
+
+    private String senderEmail;
+    private String receiverEmail;
 }

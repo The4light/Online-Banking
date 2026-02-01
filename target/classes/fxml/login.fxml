@@ -26,7 +26,7 @@
         <PasswordField fx:id="passwordField" promptText="Password" />
 
         <Button text="Sign In" onAction="#handleLogin" styleClass="button-primary" prefWidth="200"/>
-
+        <Label fx:id="statusLabel" text="" style="-fx-text-fill: red;" />
         <Hyperlink text="Don't have an account? Sign Up" onAction="#switchToRegister" style="-fx-text-fill: #2a73e8;"/>
     </VBox>
 </AnchorPane>
