@@ -1,14 +1,16 @@
 package com.bankapp.frontend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties; // Add this import
 import java.math.BigDecimal;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDTO {
-    // These MUST match the names in the browser exactly
     private String accountNumber;
     private BigDecimal balance;
     private String accountType;
+    private String userEmail; // Add this!
 }

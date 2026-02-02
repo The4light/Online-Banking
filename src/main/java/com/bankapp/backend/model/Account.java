@@ -2,6 +2,7 @@ package com.bankapp.backend.model;
 
 import com.bankapp.backend.enums.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -32,5 +33,6 @@ public class Account {
     private User user;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("account") // <--- ADD THIS LINE
     private List<Transaction> transactions;
 }

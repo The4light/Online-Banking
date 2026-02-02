@@ -10,10 +10,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collections;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,9 +41,14 @@ public class LoginController {
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
                     if (response.statusCode() == 200) {
-                        // ONLY fetch accounts if login was successful
-                        fetchUserAccountsAndSwitch(emailField.getText(), (Node) event.getSource());
-                    } else {
+                        // Parse the name from the response body (it's JSON now)
+                        String body = response.body();
+                        String firstName = body.substring(body.indexOf("firstName\":\"") + 12, body.indexOf("\",\"email"));
+
+                        Platform.runLater(() -> {
+                            fetchUserAccountsAndSwitch(emailField.getText(), firstName, (Node) event.getSource());
+                        });
+                    }else {
                         Platform.runLater(() -> {
                             statusLabel.setText("Invalid email or password!");
                         });
@@ -52,7 +60,8 @@ public class LoginController {
                 });
     }
     // Helper method to fetch data before showing the Dashboard
-    private void fetchUserAccountsAndSwitch(String email, Node sourceNode) {
+    // Change the signature to include String firstName
+    private void fetchUserAccountsAndSwitch(String email, String firstName, Node sourceNode) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/accounts/user/" + email))
@@ -61,14 +70,15 @@ public class LoginController {
 
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
-                    // Convert JSON response to List<AccountDTO>
                     List<AccountDTO> accounts = parseAccountsJson(response.body());
 
                     Platform.runLater(() -> {
-                        // Switch scene and pass data to the new controller
                         DashboardController controller = SceneManager.loadDashboard(sourceNode);
-                        controller.setAccountData(accounts);
-                        controller.setWelcomeMessage("Welcome back, " + email + "!");
+                        if (controller != null) {
+                            controller.setAccountData(accounts);
+                            // Use the firstName we passed in!
+                            controller.setWelcomeMessage("Welcome back, " + firstName + "!");
+                        }
                     });
                 });
     }
@@ -76,12 +86,20 @@ public class LoginController {
     public void switchToRegister(ActionEvent event) {
         SceneManager.switchScene((Node) event.getSource(), "register.fxml");
     }
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+
     private List<AccountDTO> parseAccountsJson(String json) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            // This tells Jackson: "Take this JSON string and turn it into a List of AccountDTOs"
-            return mapper.readValue(json, new TypeReference<List<AccountDTO>>() {});
-        } catch (Exception e) {
+            // If the backend sends "No accounts found" or empty text, return an empty list
+            if (json == null || json.isBlank() || !json.trim().startsWith("[")) {
+                System.out.println("DEBUG: Received non-JSON response from backend: " + json);
+                return java.util.Collections.emptyList();
+            }
+
+            return objectMapper.readValue(json, new com.fasterxml.jackson.core.type.TypeReference<List<AccountDTO>>() {});
+        } catch (IOException e) {
+            System.err.println("ERROR: Failed to parse accounts JSON: " + e.getMessage());
             e.printStackTrace();
             return java.util.Collections.emptyList();
         }

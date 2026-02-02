@@ -11,4 +11,5 @@ public class AccountDTO {
     private String accountNumber;
     private BigDecimal balance;
     private String accountType;
+    private String userEmail;
 }

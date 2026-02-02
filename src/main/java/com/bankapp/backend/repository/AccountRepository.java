@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
+
     // For Dashboard: Finds all accounts linked to the user's email
     List<Account> findByUserEmail(String email);
 

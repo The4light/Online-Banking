@@ -1,6 +1,7 @@
 package com.bankapp.backend.model;
 
 import com.bankapp.backend.enums.TransactionType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnoreProperties("transactions")
     private Account account;
 
     @PrePersist
