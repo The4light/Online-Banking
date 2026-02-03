@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.bankapp.frontend.controller.ProfileController"
+      style="-fx-background-color: #f4f7f6; -fx-padding: 40;">
+
+    <Text text="My Profile" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: #2c3e50;"/>
+
+    <GridPane vgap="15" hgap="10" alignment="CENTER">
+        <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="firstNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-text-fill: #34495e;"/>
+
+        <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+        <Label fx:id="lastNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-text-fill: #34495e;"/>
+
+        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+        <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-text-fill: #34495e;"/>
+
+        <Label text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+        <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" style="-fx-text-fill: #34495e;"/>
+    </GridPane>
+
+    <Button text="Back to Dashboard" onAction="#handleBack"
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 5; -fx-cursor: hand;"/>
+</VBox>

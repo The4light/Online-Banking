@@ -3,19 +3,21 @@ package com.bankapp.frontend.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true) // This stops the "Unrecognized field" error
 public class TransactionDTO {
     private String description;
     private BigDecimal amount;
-    private String timestamp;
+    private LocalDateTime timestamp; // This MUST match the Backend field name
 
-    // This helper method creates the clean date: "2026-02-02"
+    // Jackson needs this for the TableView to find the value
     public String getFormattedDate() {
-        if (timestamp != null && timestamp.contains("T")) {
-            return timestamp.split("T")[0];
-        }
-        return timestamp;
+        if (timestamp == null) return "";
+        return timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+
+    // Getters and Setters for description and amount...
 }

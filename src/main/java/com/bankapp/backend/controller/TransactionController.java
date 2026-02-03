@@ -2,6 +2,7 @@ package com.bankapp.backend.controller;
 
 import com.bankapp.backend.model.Transaction;
 import com.bankapp.backend.service.AccountService;
+import com.bankapp.backend.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/api/accounts")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class TransactionController {
 
     private final AccountService accountService;
+    private final TransactionService transactionService;
 
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(@RequestBody Map<String, Object> request) {
@@ -34,10 +36,10 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/history/{accountNumber}")
-    public ResponseEntity<List<Transaction>> getHistory(@PathVariable String accountNumber) {
-        // Now returning REAL data from the database
-        List<Transaction> history = accountService.getTransactionHistory(accountNumber);
-        return ResponseEntity.ok(history);
+    @GetMapping("/transactions/{accountNumber}")
+    public ResponseEntity<List<Transaction>> getTransactions(@PathVariable String accountNumber) {
+        System.out.println("DEBUG: Fetching transactions for account: " + accountNumber);
+        List<Transaction> transactions = transactionService.getTransactionsByAccountNumber(accountNumber);
+        return ResponseEntity.ok(transactions);
     }
 }

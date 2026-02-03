@@ -2,13 +2,18 @@ package com.bankapp.backend.controller;
 
 import com.bankapp.backend.dto.AuthResponse;
 import com.bankapp.backend.dto.LoginRequest;
+import com.bankapp.backend.model.Transaction;
 import com.bankapp.backend.model.User;
 import com.bankapp.backend.repository.UserRepository;
+import com.bankapp.backend.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import com.bankapp.backend.service.AccountService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth") // Note: The path is /api/auth
@@ -19,7 +24,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountService accountService;
-
+    private final TransactionService transactionService;
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return userRepository.findByEmail(request.getEmail())
@@ -50,5 +55,16 @@ public class AuthController {
         accountService.createDefaultAccounts(savedUser);
 
         return ResponseEntity.ok(savedUser);
+    }
+    @GetMapping("/user/{email}")
+    public ResponseEntity<?> getUserProfile(@PathVariable String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> ResponseEntity.ok(Map.of(
+                        "firstName", user.getFirstName(),
+                        "lastName", user.getLastName(),
+                        "email", user.getEmail(),
+                        "phoneNumber", user.getPhoneNumber()
+                )))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

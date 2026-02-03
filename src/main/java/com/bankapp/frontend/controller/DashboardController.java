@@ -27,6 +27,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DashboardController {
@@ -39,18 +40,14 @@ public class DashboardController {
     @FXML private Label checkingAccNumLabel;
     @FXML private Label savingsAccNumLabel;
     @FXML private Label investmentAccNumLabel;
+    @FXML private Label topAccountLabel;
 
-    // Fixed: Changed TableView<?> to TableView<TransactionDTO>
     @FXML private TableView<TransactionDTO> transactionTable;
     @FXML private TableColumn<TransactionDTO, String> colDescription;
     @FXML private TableColumn<TransactionDTO, BigDecimal> colAmount;
     @FXML private TableColumn<TransactionDTO, LocalDateTime> colDate;
-    @FXML private Label topAccountLabel;
 
     private List<AccountDTO> currentAccounts;
-    private String currentUserEmail;
-
-    // ADDED: The ObjectMapper needs to be initialized to handle dates correctly
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     public void setWelcomeMessage(String message) {
@@ -59,47 +56,35 @@ public class DashboardController {
 
     public void setAccountData(List<AccountDTO> accounts) {
         this.currentAccounts = accounts;
-        BigDecimal total = BigDecimal.ZERO;
 
         if (accounts != null && !accounts.isEmpty()) {
-            // 1. Get the shared number from the first account
-            String sharedNumber = accounts.get(0).getAccountNumber();
+            // Since we only have ONE account now, we take the first one
+            AccountDTO mainAcc = accounts.get(0);
+            String accNum = mainAcc.getAccountNumber();
+            BigDecimal balance = mainAcc.getBalance() != null ? mainAcc.getBalance() : BigDecimal.ZERO;
 
-            // 2. Set the top label (Make sure this @FXML Label exists in your file!)
-            topAccountLabel.setText("Account Number: " + sharedNumber);
+            String balanceStr = String.format("$%,.2f", balance);
 
-            // 3. Load history ONCE for the shared number
-            loadTransactionHistory(sharedNumber);
+            // Update main display
+            topAccountLabel.setText("Account Number: " + accNum);
+            totalBalanceLabel.setText(balanceStr);
 
-            // 4. Update the individual balance cards
-            for (AccountDTO acc : accounts) {
-                BigDecimal balance = acc.getBalance() != null ? acc.getBalance() : BigDecimal.ZERO;
-                total = total.add(balance);
+            // Update the Checking card
+            checkingBalanceLabel.setText(balanceStr);
+            checkingAccNumLabel.setText("Acc: " + accNum);
 
-                String balanceStr = String.format("$%,.2f", balance);
-                String accNumStr = "Acc: " + acc.getAccountNumber();
+            // Set others to Inactive/Zero so the UI looks clean
+            savingsBalanceLabel.setText("$0.00");
+            savingsAccNumLabel.setText("Inactive");
+            investmentBalanceLabel.setText("$0.00");
+            investmentAccNumLabel.setText("Inactive");
 
-                switch (acc.getAccountType().toUpperCase()) {
-                    case "CHECKING" -> {
-                        checkingBalanceLabel.setText(balanceStr);
-                        checkingAccNumLabel.setText(accNumStr);
-                    }
-                    case "SAVINGS" -> {
-                        savingsBalanceLabel.setText(balanceStr);
-                        savingsAccNumLabel.setText(accNumStr);
-                    }
-                    case "INVESTMENT" -> {
-                        investmentBalanceLabel.setText(balanceStr);
-                        investmentAccNumLabel.setText(accNumStr);
-                    }
-                }
-            }
-            totalBalanceLabel.setText(String.format("$%,.2f", total));
+            // Load history for this specific account
+            loadTransactionHistory(accNum);
         }
     }
-    private void loadTransactionHistory(String accountNumber) {
-        System.out.println("DEBUG: Requesting transactions for: " + accountNumber); // Check console
 
+    private void loadTransactionHistory(String accountNumber) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/accounts/transactions/" + accountNumber))
@@ -108,9 +93,6 @@ public class DashboardController {
 
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
-                    System.out.println("DEBUG: Response Code: " + response.statusCode());
-                    System.out.println("DEBUG: Raw JSON: " + response.body()); // <--- CRUCIAL: See the raw data
-
                     if (response.statusCode() == 200) {
                         try {
                             List<TransactionDTO> transactions = objectMapper.readValue(
@@ -119,20 +101,52 @@ public class DashboardController {
                             );
 
                             Platform.runLater(() -> {
-                                System.out.println("DEBUG: Transactions parsed: " + transactions.size());
                                 ObservableList<TransactionDTO> data = FXCollections.observableArrayList(transactions);
                                 transactionTable.setItems(data);
-                                transactionTable.refresh();
+                                if (transactions.isEmpty()) {
+                                    transactionTable.setPlaceholder(new Label("No recent transactions."));
+                                }
                             });
                         } catch (IOException e) {
-                            System.err.println("DEBUG: JSON Parsing Failed!");
                             e.printStackTrace();
                         }
                     }
-                }).exceptionally(ex -> {
-                    ex.printStackTrace();
-                    return null;
                 });
+    }
+
+    @FXML
+    public void initialize() {
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        // Date formatting
+        colDate.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+        colDate.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                }
+            }
+        });
+
+        // Amount formatting with colors
+        colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        colAmount.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+            @Override
+            protected void updateItem(BigDecimal item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(String.format("$%,.2f", item));
+                    setStyle(item.compareTo(BigDecimal.ZERO) < 0 ? "-fx-text-fill: #e74c3c;" : "-fx-text-fill: #2ecc71;");
+                }
+            }
+        });
     }
 
     @FXML
@@ -148,19 +162,46 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
-
     @FXML
-    public void handleLogout(ActionEvent event) {
-        SceneManager.switchScene((Node) event.getSource(), "login.fxml");
-    }
-    @FXML
-    public void initialize() {
-        // Link columns to DTO fields.
-        // Note: "formattedDate" matches the getFormattedDate() method you just added!
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        colDate.setCellValueFactory(new PropertyValueFactory<>("formattedDate"));
+    public void handleProfileNavigation(ActionEvent event) {
+        // We get the email from the current accounts list
+        String email = currentAccounts.get(0).getUserEmail();
 
-        transactionTable.setPlaceholder(new Label("Waiting for data..."));
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/auth/user/" + email))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    if (response.statusCode() == 200) {
+                        try {
+                            com.bankapp.frontend.dto.UserDTO user = objectMapper.readValue(
+                                    response.body(),
+                                    com.bankapp.frontend.dto.UserDTO.class
+                            );
+
+                            Platform.runLater(() -> {
+                                try {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/profile.fxml"));
+                                    Parent root = loader.load();
+
+                                    ProfileController controller = loader.getController();
+                                    controller.setUserData(currentAccounts, user);
+
+                                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                                    stage.getScene().setRoot(root);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
+
+    @FXML public void handleLogout(ActionEvent event) { SceneManager.switchScene((Node) event.getSource(), "login.fxml"); }
 }

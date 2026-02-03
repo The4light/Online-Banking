@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +45,9 @@ public class TransactionService {
 
         transactionRepository.save(tx);
         return "Complete Transfer Successful";
+    }
+    public List<Transaction> getTransactionsByAccountNumber(String accountNumber) {
+        // This calls the Repository method we updated with the @Query
+        return transactionRepository.findByAccountNumber(accountNumber);
     }
 }
