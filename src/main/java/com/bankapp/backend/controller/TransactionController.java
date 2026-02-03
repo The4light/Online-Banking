@@ -23,15 +23,26 @@ public class TransactionController {
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(@RequestBody Map<String, Object> request) {
         try {
+            // 1. Extract values with basic null checking
             String sourceAcc = (String) request.get("sourceAccountNumber");
             String destAcc = (String) request.get("destinationAccountNumber");
-            BigDecimal amount = new BigDecimal(request.get("amount").toString());
             String description = (String) request.get("description");
 
-            accountService.transferMoney(sourceAcc, destAcc, amount, description);
+            // 2. Safe BigDecimal Conversion
+            Object amountObj = request.get("amount");
+            if (amountObj == null || amountObj.toString().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Amount is required"));
+            }
+            BigDecimal amount = new BigDecimal(amountObj.toString());
+
+            // 3. Service Call
+            accountService.transferMoney(sourceAcc, destAcc, amount, description != null ? description : "Transfer");
 
             return ResponseEntity.ok(Map.of("message", "Transfer Successful!"));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Invalid amount format"));
         } catch (Exception e) {
+            // This will catch your custom errors like "Insufficient Funds" from the service
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }

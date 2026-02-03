@@ -2,6 +2,7 @@ package com.bankapp.frontend.controller;
 
 import com.bankapp.frontend.dto.AccountDTO;
 import com.bankapp.frontend.dto.TransactionDTO;
+import com.bankapp.frontend.dto.UserDTO;
 import com.bankapp.frontend.utils.SceneManager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +51,42 @@ public class DashboardController {
     private List<AccountDTO> currentAccounts;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+    @FXML
+    public void initialize() {
+        // Setup Table Columns
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        // Date formatting
+        colDate.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+        colDate.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                }
+            }
+        });
+
+        // Amount formatting with colors
+        colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        colAmount.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+            @Override
+            protected void updateItem(BigDecimal item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(String.format("$%,.2f", item));
+                    setStyle(item.compareTo(BigDecimal.ZERO) < 0 ? "-fx-text-fill: #e74c3c;" : "-fx-text-fill: #2ecc71;");
+                }
+            }
+        });
+    }
+
     public void setWelcomeMessage(String message) {
         welcomeLabel.setText(message);
     }
@@ -58,28 +95,24 @@ public class DashboardController {
         this.currentAccounts = accounts;
 
         if (accounts != null && !accounts.isEmpty()) {
-            // Since we only have ONE account now, we take the first one
             AccountDTO mainAcc = accounts.get(0);
             String accNum = mainAcc.getAccountNumber();
             BigDecimal balance = mainAcc.getBalance() != null ? mainAcc.getBalance() : BigDecimal.ZERO;
 
             String balanceStr = String.format("$%,.2f", balance);
 
-            // Update main display
+            // Update main UI display
             topAccountLabel.setText("Account Number: " + accNum);
             totalBalanceLabel.setText(balanceStr);
-
-            // Update the Checking card
             checkingBalanceLabel.setText(balanceStr);
             checkingAccNumLabel.setText("Acc: " + accNum);
 
-            // Set others to Inactive/Zero so the UI looks clean
+            // Defaults for empty slots
             savingsBalanceLabel.setText("$0.00");
             savingsAccNumLabel.setText("Inactive");
             investmentBalanceLabel.setText("$0.00");
             investmentAccNumLabel.setText("Inactive");
 
-            // Load history for this specific account
             loadTransactionHistory(accNum);
         }
     }
@@ -115,38 +148,9 @@ public class DashboardController {
     }
 
     @FXML
-    public void initialize() {
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-        // Date formatting
-        colDate.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
-        colDate.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-                }
-            }
-        });
-
-        // Amount formatting with colors
-        colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        colAmount.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(String.format("$%,.2f", item));
-                    setStyle(item.compareTo(BigDecimal.ZERO) < 0 ? "-fx-text-fill: #e74c3c;" : "-fx-text-fill: #2ecc71;");
-                }
-            }
-        });
+    public void handleDashboardNavigation(ActionEvent event) {
+        // Refresh the current view
+        setAccountData(currentAccounts);
     }
 
     @FXML
@@ -156,17 +160,45 @@ public class DashboardController {
             Parent root = loader.load();
             TransferController controller = loader.getController();
             controller.setAccounts(currentAccounts);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.getScene().setRoot(root);
+            switchScene(event, root);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void handlePaymentsNavigation(ActionEvent event) {
+        try {
+            // 1. Ensure this path is correct: /fxml/payments.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/payments.fxml"));
+            Parent root = loader.load();
+
+            // 2. This works ONLY if payments.fxml has fx:controller="...PaymentController"
+            PaymentController controller = loader.getController();
+            controller.setAccounts(currentAccounts);
+
+            switchScene(event, root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleCardsNavigation(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/cards.fxml"));
+            Parent root = loader.load();
+            CardController controller = loader.getController();
+            controller.setAccountData(currentAccounts);
+            switchScene(event, root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void handleProfileNavigation(ActionEvent event) {
-        // We get the email from the current accounts list
         String email = currentAccounts.get(0).getUserEmail();
-
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/auth/user/" + email))
@@ -177,31 +209,28 @@ public class DashboardController {
                 .thenAccept(response -> {
                     if (response.statusCode() == 200) {
                         try {
-                            com.bankapp.frontend.dto.UserDTO user = objectMapper.readValue(
-                                    response.body(),
-                                    com.bankapp.frontend.dto.UserDTO.class
-                            );
-
+                            UserDTO user = objectMapper.readValue(response.body(), UserDTO.class);
                             Platform.runLater(() -> {
                                 try {
                                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/profile.fxml"));
                                     Parent root = loader.load();
-
                                     ProfileController controller = loader.getController();
                                     controller.setUserData(currentAccounts, user);
-
-                                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                                    stage.getScene().setRoot(root);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                    switchScene(event, root);
+                                } catch (IOException e) { e.printStackTrace(); }
                             });
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        } catch (IOException e) { e.printStackTrace(); }
                     }
                 });
     }
 
-    @FXML public void handleLogout(ActionEvent event) { SceneManager.switchScene((Node) event.getSource(), "login.fxml"); }
+    @FXML
+    public void handleLogout(ActionEvent event) {
+        SceneManager.switchScene((Node) event.getSource(), "login.fxml");
+    }
+
+    private void switchScene(ActionEvent event, Parent root) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.getScene().setRoot(root);
+    }
 }

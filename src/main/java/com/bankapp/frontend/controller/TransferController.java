@@ -42,20 +42,27 @@ public class TransferController {
 
     @FXML
     private void handleTransfer() {
-        if (targetAccountField.getText().isEmpty() || amountField.getText().isEmpty()) {
+        // 1. Get and Trim values to avoid hidden space errors
+        String target = targetAccountField.getText().trim();
+        String amount = amountField.getText().trim();
+        String description = (descriptionField.getText() == null) ? "Transfer" : descriptionField.getText().trim();
+
+        if (target.isEmpty() || amount.isEmpty()) {
             statusLabel.setText("Please fill in all fields");
             statusLabel.setStyle("-fx-text-fill: red;");
             return;
         }
 
         String sourceAcc = userAccounts.get(0).getAccountNumber();
+
+        // 2. Build JSON carefully (Added quotes for safety)
         String json = String.format(
                 "{\"sourceAccountNumber\":\"%s\", \"destinationAccountNumber\":\"%s\", \"amount\":%s, \"description\":\"%s\"}",
-                sourceAcc, targetAccountField.getText(), amountField.getText(), descriptionField.getText()
+                sourceAcc, target, amount, description.replace("\"", "\\\"")
         );
 
         statusLabel.setText("Processing...");
-        statusLabel.setStyle("-fx-text-fill: blue;");
+        statusLabel.setStyle("-fx-text-fill: #3498db;");
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -68,14 +75,15 @@ public class TransferController {
                 .thenAccept(response -> {
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
-                            statusLabel.setText("Transfer Successful!");
-                            statusLabel.setStyle("-fx-text-fill: green;");
+                            statusLabel.setText("✅ Transfer Successful!");
+                            statusLabel.setStyle("-fx-text-fill: #2ecc71;");
                             targetAccountField.clear();
                             amountField.clear();
                             descriptionField.clear();
                         } else {
-                            statusLabel.setText("Error: " + response.body());
-                            statusLabel.setStyle("-fx-text-fill: red;");
+                            // This shows you the ACTUAL error from the backend
+                            statusLabel.setText("❌ Error: " + response.body());
+                            statusLabel.setStyle("-fx-text-fill: #e74c3c;");
                         }
                     });
                 });

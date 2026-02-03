@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bankapp.frontend.controller.CardController">
+
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+    </stylesheets>
+
+    <left>
+        <VBox spacing="20" prefWidth="250" styleClass="sidebar">
+            <padding><Insets top="20" left="15" right="15"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitHeight="40" preserveRatio="true"><Image url="@../assets/images/logo.jpeg" /></ImageView>
+                <Label text="SecureBank" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;"/>
+            </HBox>
+            <Button text="Dashboard" onAction="#handleDashboardNavigation" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button text="Transfer" onAction="#handleTransferNavigation" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button text="Payments" onAction="#handlePaymentsNavigation" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button text="Cards" styleClass="sidebar-btn-active" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="Logout" onAction="#handleLogout" styleClass="sidebar-btn-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;">
+            <VBox spacing="30" style="-fx-padding: 40;">
+                <VBox spacing="5">
+                    <Label text="My Cards" style="-fx-font-size: 26; -fx-font-weight: bold;"/>
+                    <Label text="Manage your debit and credit cards" style="-fx-text-fill: #7f8c8d;"/>
+                </VBox>
+
+                <VBox spacing="15" maxWidth="400">
+                    <VBox prefHeight="220" style="-fx-background-color: #1a2e44; -fx-background-radius: 15; -fx-padding: 25;">
+                        <HBox alignment="TOP_LEFT">
+                            <VBox>
+                                <Label text="Platinum Debit Card" style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;"/>
+                                <Label fx:id="cardHolderLabel" text="VALUED CUSTOMER" style="-fx-text-fill: #bdc3c7; -fx-font-size: 10;"/>
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <ImageView fitHeight="30" preserveRatio="true" opacity="0.8">
+                                <Image url="@../assets/images/chip.png"/> </ImageView>
+                        </HBox>
+
+                        <Region VBox.vgrow="ALWAYS"/>
+
+                        <Label fx:id="cardNumberLabel" text="4532 •••• •••• 4521"
+                               style="-fx-text-fill: white; -fx-font-size: 24; -fx-letter-spacing: 2;"/>
+
+                        <HBox spacing="40" style="-fx-padding: 20 0 0 0;">
+                            <VBox>
+                                <Label text="VALID THRU" style="-fx-text-fill: #bdc3c7; -fx-font-size: 9;"/>
+                                <Label text="12/28" style="-fx-text-fill: white; -fx-font-size: 12;"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button text="👁 Show" onAction="#handleToggleCardVisibility" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-pref-width: 120; -fx-cursor: hand;"/>
+                        <Button text="🔒 Lock" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-pref-width: 120;"/>
+                        <Button text="⋮ More" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-pref-width: 120;"/>
+                    </HBox>
+                </VBox>
+
+                <HBox spacing="20">
+                    <VBox styleClass="card" prefWidth="250" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
+                        <Label text="Daily Limit" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13;"/>
+                        <Label text="\$5,000" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox styleClass="card" prefWidth="250" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
+                        <Label text="ATM Withdrawals" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13;"/>
+                        <Label text="\$1,000" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="15" styleClass="card" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10;">
+                    <Label text="Recent Card Transactions" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <TableView fx:id="cardTransactionTable" prefHeight="200" style="-fx-background-color: transparent;">
+                        <columns>
+                            <TableColumn text="Date" prefWidth="150"/>
+                            <TableColumn text="Description" prefWidth="300"/>
+                            <TableColumn text="Amount" prefWidth="150"/>
+                        </columns>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

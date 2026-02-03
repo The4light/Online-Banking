@@ -2,56 +2,104 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
 <?import java.net.URL?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.bankapp.frontend.controller.TransferController">
-
+<BorderPane prefHeight="900.0" prefWidth="1200.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bankapp.frontend.controller.TransferController">
     <stylesheets>
         <URL value="@../css/styles.css" />
     </stylesheets>
 
     <left>
-        <VBox spacing="20" prefWidth="250" styleClass="sidebar">
-            <Label text="BANK APP" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;">
-                <VBox.margin><Insets top="20" left="20" bottom="40"/></VBox.margin>
-            </Label>
-            <Button text="Dashboard" onAction="#goBack" styleClass="sidebar-btn" maxWidth="Infinity"/>
-            <Button text="Transfer Money" styleClass="sidebar-btn-active" maxWidth="Infinity"/>
+        <VBox prefWidth="240" spacing="15" style="-fx-background-color: #1e2d3b; -fx-padding: 20;">
+            <Label text="SecureBank" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
+            <Region prefHeight="30"/>
+            <Button text="Dashboard" onAction="#goBack" styleClass="sidebar-btn" maxWidth="Infinity" />
+            <Button text="Transfer" styleClass="sidebar-btn-active" maxWidth="Infinity" />
+            <Button text="Payments" styleClass="sidebar-btn" maxWidth="Infinity" />
+            <Button text="Cards" styleClass="sidebar-btn" maxWidth="Infinity" />
+            <Button text="Savings" styleClass="sidebar-btn" maxWidth="Infinity" />
         </VBox>
     </left>
 
     <center>
-        <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #f4f7f9;">
-            <Label text="Transfer Funds" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1e3a52;"/>
-
-            <VBox spacing="20" styleClass="card" style="-fx-max-width: 500; -fx-padding: 30;">
-                <VBox spacing="5">
-                    <Label text="From Account" style="-fx-font-weight: bold;"/>
-                    <ComboBox fx:id="fromAccountSelector" prefWidth="440" promptText="Select Source Account"/>
-                </VBox>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f8f9fa;">
+            <VBox spacing="25" style="-fx-padding: 30;">
 
                 <VBox spacing="5">
-                    <Label text="Beneficiary Account Number" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="targetAccountField" promptText="Enter 10-digit account number"/>
+                    <Label text="Transfer Funds" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #1e2d3b;"/>
+                    <Label text="Send money between your accounts or to beneficiaries" style="-fx-text-fill: #7f8c8d;"/>
                 </VBox>
 
-                <VBox spacing="5">
-                    <Label text="Amount ($)" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="amountField" promptText="0.00"/>
+                <HBox spacing="25">
+                    <VBox spacing="20" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                        <Label text="Transfer Details" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+                        <VBox spacing="8">
+                            <Label text="From Account *" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                            <ComboBox fx:id="fromAccountSelector" maxWidth="Infinity" prefHeight="45" promptText="Select source account"/>
+                        </VBox>
+
+                        <VBox spacing="8">
+                            <Label text="To Account / Beneficiary *" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                            <TextField fx:id="targetAccountField" prefHeight="45" promptText="Enter 10-digit account number"/>
+                        </VBox>
+
+                        <VBox spacing="8">
+                            <Label text="Amount *" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                            <TextField fx:id="amountField" prefHeight="45" promptText="0.00"/>
+                        </VBox>
+
+                        <VBox spacing="8">
+                            <Label text="Description (Optional)" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                            <TextArea fx:id="descriptionField" prefHeight="80" promptText="Payment description or note" wrapText="true"/>
+                        </VBox>
+
+                        <HBox spacing="15">
+                            <Button text="Complete Transfer" onAction="#handleTransfer" prefHeight="45" prefWidth="180" style="-fx-background-color: #1e2d3b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                            <Button text="Clear Form" prefHeight="45" prefWidth="120" style="-fx-background-color: transparent; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-cursor: hand;"/>
+                        </HBox>
+                        <Label fx:id="statusLabel" wrapText="true"/>
+                    </VBox>
+
+                    <VBox spacing="20" prefWidth="350">
+                        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                            <Label text="Transfer Summary" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+                            <Separator/>
+                            <GridPane vgap="10">
+                                <Label text="Amount" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-text-fill: #7f8c8d;"/>
+                                <Label text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="0" alignment="CENTER_RIGHT" maxWidth="Infinity" style="-fx-font-weight: bold;"/>
+
+                                <Label text="Transfer Fee" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-text-fill: #7f8c8d;"/>
+                                <Label text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" alignment="CENTER_RIGHT" maxWidth="Infinity" style="-fx-font-weight: bold;"/>
+
+                                <Label text="Total" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                                <Label text="\$0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" alignment="CENTER_RIGHT" maxWidth="Infinity" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                            </GridPane>
+                        </VBox>
+
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                            <Label text="Important Information" style="-fx-font-weight: bold;"/>
+                            <Label text="• Internal transfers are instant" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;"/>
+                            <Label text="• No fees for transfers under $10,000" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;"/>
+                            <Label text="• Daily transfer limit: $25,000" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                    <Label text="Recent Transfers" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <TableView fx:id="recentTransfersTable" prefHeight="200" style="-fx-background-color: transparent;">
+                        <columns>
+                            <TableColumn text="Date" prefWidth="150"/>
+                            <TableColumn text="From" prefWidth="200"/>
+                            <TableColumn text="To" prefWidth="200"/>
+                            <TableColumn text="Description" prefWidth="250"/>
+                            <TableColumn text="Amount" prefWidth="150"/>
+                        </columns>
+                    </TableView>
                 </VBox>
-
-                <VBox spacing="5">
-                    <Label text="Description" style="-fx-font-weight: bold;"/>
-                    <TextArea fx:id="descriptionField" prefHeight="80" promptText="What is this for?"/>
-                </VBox>
-
-                <Button text="Confirm Transfer" onAction="#handleTransfer" maxWidth="Infinity"
-                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12;"/>
-
-                <Label fx:id="statusLabel" wrapText="true"/>
             </VBox>
-        </VBox>
+        </ScrollPane>
     </center>
 </BorderPane>

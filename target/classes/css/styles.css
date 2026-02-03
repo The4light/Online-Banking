@@ -69,3 +69,60 @@
     -fx-text-fill: white;
     -fx-margin: 0 0 20 0;
 }
+/* Card styling for the Biller boxes */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);
+}
+
+/* The dark button style from the 'Pay Now' and 'Submit' buttons */
+.pay-now-btn, .submit-btn {
+    -fx-background-color: #1e3a52; /* Dark Navy Blue */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.pay-now-btn:hover, .submit-btn:hover {
+    -fx-background-color: #2c3e50;
+}
+
+/* Sidebar button for the active page (Payments) */
+.sidebar-btn-active {
+    -fx-background-color: #3d7068; /* Teal color from your image */
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 20;
+    -fx-background-radius: 5;
+}
+
+/* Sidebar button for inactive pages */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #bdc3c7;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 20;
+    -fx-cursor: hand;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+}
+
+/* ComboBox and TextField styling to match the clean input look */
+.combo-box, .text-field {
+    -fx-background-color: white;
+    -fx-border-color: #dcdde1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+.combo-box:focused, .text-field:focused {
+    -fx-border-color: #3498db;
+}
